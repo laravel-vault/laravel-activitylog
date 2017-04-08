@@ -8,10 +8,14 @@ use Spatie\Activitylog\Models\Activity;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Contracts\Config\Repository;
 use Spatie\Activitylog\Exceptions\CouldNotLogActivity;
+use Dingo\Api\Routing\Helpers;
 
 class ActivityLogger
 {
-    use Macroable;
+    use Macroable, Helpers {
+        Helpers::__call insteadof Macroable;
+        Macroable::__call as call;
+    }
 
     /** @var \Illuminate\Auth\AuthManager */
     protected $auth;
@@ -36,13 +40,7 @@ class ActivityLogger
 
         $this->properties = collect();
 
-        $authDriver = $config['laravel-activitylog']['default_auth_driver'] ?? $auth->getDefaultDriver();
-
-        if (starts_with(app()->version(), '5.1')) {
-            $this->causedBy = $auth->driver($authDriver)->user();
-        } else {
-            $this->causedBy = $auth->guard($authDriver)->user();
-        }
+        $this->causedBy = app('Dingo\Api\Auth\Auth')->user();
 
         $this->logName = $config['laravel-activitylog']['default_log_name'];
 
