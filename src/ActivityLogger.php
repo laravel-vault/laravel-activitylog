@@ -40,7 +40,11 @@ class ActivityLogger
 
         $this->properties = collect();
 
-        $this->causedBy = app('Dingo\Api\Auth\Auth')->user();
+        if(! App::runningInConsole()) {
+            $this->causedBy = app('Dingo\Api\Auth\Auth')->user();
+        } else {
+            $this->causedBy = null;
+        }
 
         $this->logName = $config['laravel-activitylog']['default_log_name'];
 
