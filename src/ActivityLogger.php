@@ -2,6 +2,7 @@
 
 namespace Spatie\Activitylog;
 
+use App;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Models\Activity;
